@@ -47,7 +47,34 @@ def create_character(name, character_class):
     # - inventory=[], active_quests=[], completed_quests=[]
     
     # Raise InvalidCharacterClassError if class not in valid list
-    pass
+    character_class = character_class.capitalize()
+    valid_classes = {
+        "Warrior": {"health": 120, "strength": 15, "magic": 5},
+        "Mage": {"health": 80, "strength": 8, "magic": 20},
+        "Rogue": {"health": 90, "strength": 12, "magic": 10},
+        "Cleric": {"health": 100, "strength": 10, "magic": 15}
+    }
+
+    if character_class not in valid_classes:
+        raise InvalidCharacterClassError(f"{character_class} is not a valid class.")
+
+    stats = valid_classes[character_class]
+    return {
+        "NAME": name,
+        "CLASS": character_class,
+        "LEVEL": 1,
+        "HEALTH": stats["health"],
+        "MAX_HEALTH": stats["health"],
+        "STRENGTH": stats["strength"],
+        "MAGIC": stats["magic"],
+        "EXPERIENCE": 0,
+        "GOLD": 100,
+        "INVENTORY": [],
+        "ACTIVE_QUESTS": [],
+        "COMPLETED_QUESTS": []
+    }
+
+
 
 def save_character(character, save_directory="data/save_games"):
     """
@@ -76,7 +103,32 @@ def save_character(character, save_directory="data/save_games"):
     # Create save_directory if it doesn't exist
     # Handle any file I/O errors appropriately
     # Lists should be saved as comma-separated values
-    pass
+    os.makedirs(save_directory, exist_ok=True)
+    filename = f"{character['NAME']}_save.txt"
+    filepath = os.path.join(save_directory, filename)
+
+    try:
+        lines = [
+            f"NAME: {character['NAME']}",
+            f"CLASS: {character['CLASS']}",
+            f"LEVEL: {character['LEVEL']}",
+            f"HEALTH: {character['HEALTH']}",
+            f"MAX_HEALTH: {character['MAX_HEALTH']}",
+            f"STRENGTH: {character['STRENGTH']}",
+            f"MAGIC: {character['MAGIC']}",
+            f"EXPERIENCE: {character['EXPERIENCE']}",
+            f"GOLD: {character['GOLD']}",
+            f"INVENTORY: {','.join(character.get('INVENTORY', []))}",
+            f"ACTIVE_QUESTS: {','.join(character.get('ACTIVE_QUESTS', []))}",
+            f"COMPLETED_QUESTS: {','.join(character.get('COMPLETED_QUESTS', []))}"
+        ]
+        with open(filepath, "w") as file:
+            file.write('\n'.join(lines))
+        return True
+    except (PermissionError, IOError):
+        raise
+
+ 
 
 def load_character(character_name, save_directory="data/save_games"):
     """
@@ -97,6 +149,8 @@ def load_character(character_name, save_directory="data/save_games"):
     # Try to read file → SaveFileCorruptedError
     # Validate data format → InvalidSaveDataError
     # Parse comma-separated lists back into Python lists
+    filename = f"{character_name}_save.txt"
+    filepath = os.path.join(save_directory, filename)
     pass
 
 def list_saved_characters(save_directory="data/save_games"):
