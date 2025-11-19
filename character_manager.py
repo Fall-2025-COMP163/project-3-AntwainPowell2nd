@@ -151,7 +151,25 @@ def load_character(character_name, save_directory="data/save_games"):
     # Parse comma-separated lists back into Python lists
     filename = f"{character_name}_save.txt"
     filepath = os.path.join(save_directory, filename)
-    pass
+    if not os.path.exists(filepath):
+        raise CharacterNotFoundError
+    try:
+        with open(filepath, "r") as file:
+            lines = file.readlines()
+    except:
+        raise SaveFileCorruptedError 
+    character = {}
+    try:
+        for line in lines:
+            key, value = line.strip().split(":")
+
+            if "," in value:
+                character[key] = value.strip().split(",")
+            else:
+                character[key] = value
+    except:
+        raise InvalidSaveDataError
+    return character
 
 def list_saved_characters(save_directory="data/save_games"):
     """
