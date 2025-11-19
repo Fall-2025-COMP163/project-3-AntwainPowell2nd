@@ -56,7 +56,7 @@ def create_character(name, character_class):
     }
 
     if character_class not in valid_classes:
-        raise InvalidCharacterClassError(f"{character_class} is not a valid class.")
+        raise InvalidCharacterClassError
 
     stats = valid_classes[character_class]
     return {
