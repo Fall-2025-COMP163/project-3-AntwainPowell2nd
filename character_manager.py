@@ -104,7 +104,7 @@ def save_character(character, save_directory="data/save_games"):
     # Handle any file I/O errors appropriately
     # Lists should be saved as comma-separated values
     os.makedirs(save_directory, exist_ok=True)
-    filename = f"{character['NAME']}_save.txt"
+    filename = f"{character['name']}_save.txt"
     filepath = os.path.join(save_directory, filename)
 
     try:
