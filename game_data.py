@@ -41,7 +41,12 @@ def load_quests(filename="data/quests.txt"):
     # - FileNotFoundError → raise MissingDataFileError
     # - Invalid format → raise InvalidDataFormatError
     # - Corrupted/unreadable data → raise CorruptedDataError
-    pass
+    '''if not os.path.exists(filename):
+        raise MissingDataFileError
+    try:
+        with open(filename, "r") as file:
+            data = file.read()'''
+    
 
 def load_items(filename="data/items.txt"):
     """
@@ -65,7 +70,7 @@ def load_items(filename="data/items.txt"):
     try:
         with open(filename, "r") as file:
             data = file.read()
-    except CorruptedDataError:
+    except (OSError, IOError):
         raise CorruptedDataError
     items = {}
     raw_items = data.strip().split("\n\n")

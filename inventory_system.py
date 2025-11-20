@@ -163,15 +163,14 @@ def use_item(character, item_id, item_data):
     # Remove item from inventory
     if not has_item(character, item_id):
         raise ItemNotFoundError
-    item_info = item_data.get(item_id)
-    if item_info is None:
+    if item_data is None:
         raise ItemNotFoundError
-    if item_info['TYPE'] != "consumable": 
+    if item_data['type'] != "consumable": 
         raise InvalidItemTypeError
-    stat_name, value = parse_item_effect(item_info["EFFECT"])
+    stat_name, value = parse_item_effect(item_data["effect"])
     apply_stat_effect(character, stat_name, value)
     character['inventory'].remove(item_id)
-    return f"{item_info['NAME']} used {stat_name} to increase by {value}"
+    return f"{item_data['item_id']} used {stat_name} to increase by {value}"
 def equip_weapon(character, item_id, item_data):
     """
     Equip a weapon
@@ -213,7 +212,7 @@ def equip_weapon(character, item_id, item_data):
     character["stats"][stat] += int(value)
     character["equiped_weapon"] = item_id
     character["inventory"].remove(item_id)
-    return f"{character['name']} equipped {item_info['NAME']} (+{value} {stat})"
+    return f"{character['item_id']} equipped {item_info['item_id']} (+{value} {stat})"
 def equip_armor(character, item_id, item_data):
     """
     Equip armor
@@ -326,7 +325,15 @@ def parse_item_effect(effect_string):
     # TODO: Implement effect parsing
     # Split on ":"
     # Convert value to integer
-    pass
+    try:
+        stat, val = effect_string.split(":")
+        stat = stat.strip()
+        val = int(val.strip())
+        return stat, val
+    except (ValueError, AttributeError):
+        raise ValueError(f"Invalid Effect Format: {effect_string}")
+
+    
 
 def apply_stat_effect(character, stat_name, value):
     """
@@ -339,7 +346,13 @@ def apply_stat_effect(character, stat_name, value):
     # TODO: Implement stat application
     # Add value to character[stat_name]
     # If stat is health, ensure it doesn't exceed max_health
-    pass
+    if stat_name not in ["health", "max_health", "strength", "magic"]:
+        raise ValueError(f"Invalid stat name {stat_name}")
+    character[stat_name] = character.get(stat_name, 0) + value
+    if stat_name == "max_health":
+        max_hp = character.get("max_health", 0)
+        if character["health"] > max_hp:
+            character["health"] = max_hp
 
 def display_inventory(character, item_data_dict):
     """
