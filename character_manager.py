@@ -60,18 +60,18 @@ def create_character(name, character_class):
 
     stats = valid_classes[character_class]
     return {
-        "NAME": name,
-        "CLASS": character_class,
-        "LEVEL": 1,
-        "HEALTH": stats["health"],
-        "MAX_HEALTH": stats["health"],
-        "STRENGTH": stats["strength"],
-        "MAGIC": stats["magic"],
-        "EXPERIENCE": 0,
-        "GOLD": 100,
-        "INVENTORY": [],
-        "ACTIVE_QUESTS": [],
-        "COMPLETED_QUESTS": []
+        "name": name,
+        "class": character_class,
+        "level": 1,
+        "health": stats["health"],
+        "max_health": stats["health"],
+        "strength": stats["strength"],
+        "magic": stats["magic"],
+        "experience": 0,
+        "gold": 100,
+        "inventory": [],
+        "active_quests": [],
+        "completed_quests": []
     }
 
 
@@ -109,18 +109,18 @@ def save_character(character, save_directory="data/save_games"):
 
     try:
         lines = [
-            f"NAME: {character['NAME']}",
-            f"CLASS: {character['CLASS']}",
-            f"LEVEL: {character['LEVEL']}",
-            f"HEALTH: {character['HEALTH']}",
-            f"MAX_HEALTH: {character['MAX_HEALTH']}",
-            f"STRENGTH: {character['STRENGTH']}",
-            f"MAGIC: {character['MAGIC']}",
-            f"EXPERIENCE: {character['EXPERIENCE']}",
-            f"GOLD: {character['GOLD']}",
-            f"INVENTORY: {','.join(character.get('INVENTORY', []))}",
-            f"ACTIVE_QUESTS: {','.join(character.get('ACTIVE_QUESTS', []))}",
-            f"COMPLETED_QUESTS: {','.join(character.get('COMPLETED_QUESTS', []))}"
+            f"NAME: {character['name']}",
+            f"CLASS: {character['class']}",
+            f"LEVEL: {character['level']}",
+            f"HEALTH: {character['health']}",
+            f"MAX_HEALTH: {character['max_health']}",
+            f"STRENGTH: {character['strength']}",
+            f"MAGIC: {character['magic']}",
+            f"EXPERIENCE: {character['experience']}",
+            f"GOLD: {character['gold']}",
+            f"INVENTORY: {','.join(character.get('inventory', []))}",
+            f"ACTIVE_QUESTS: {','.join(character.get('active_quests', []))}",
+            f"COMPLETED_QUESTS: {','.join(character.get('completed_quests', []))}"
         ]
         with open(filepath, "w") as file:
             file.write('\n'.join(lines))
