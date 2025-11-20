@@ -60,7 +60,39 @@ def load_items(filename="data/items.txt"):
     """
     # TODO: Implement this function
     # Must handle same exceptions as load_quests
-    pass
+    if not os.path.exists(filename):
+        raise MissingDataFileError
+    try:
+        with open(filename, "r") as file:
+            data = file.read()
+    except CorruptedDataError:
+        raise CorruptedDataError
+    items = {}
+    raw_items = data.strip().split("\n\n")
+    for section in raw_items:
+        lines = section.strip().split("\n")
+        item_content = {}
+        try:
+            for line in lines:
+                key, value = line.split(":", 1)
+                key = key.strip().upper()
+                value = value.strip()
+
+                if key == "ITEM_ID":
+                    item_id = value
+                elif key == "EFFECT":
+                    stat, val = value.split(":")
+                    item_content["EFFECT"] = {stat.strip(): int(val.strip())}
+                elif key == "COST":
+                    item_content["COST"] = int(value)
+                else:
+                    item_content[key] = value 
+            if not item_id:
+                raise InvalidDataFormatError
+            items[item_id] = item_content
+        except InvalidDataFormatError:
+            raise InvalidDataFormatError
+    return items
 
 def validate_quest_data(quest_dict):
     """
@@ -142,7 +174,7 @@ if __name__ == "__main__":
     print("=== GAME DATA MODULE TEST ===")
     
     # Test creating default files
-    # create_default_data_files()
+    create_default_data_files()
     
     # Test loading quests
     # try:
@@ -154,11 +186,11 @@ if __name__ == "__main__":
     #     print(f"Invalid quest format: {e}")
     
     # Test loading items
-    # try:
-    #     items = load_items()
-    #     print(f"Loaded {len(items)} items")
-    # except MissingDataFileError:
-    #     print("Item file not found")
-    # except InvalidDataFormatError as e:
-    #     print(f"Invalid item format: {e}")
+    try:
+        items = load_items()
+        print(f"Loaded {len(items)} items")
+    except MissingDataFileError:
+        print("Item file not found")
+    except InvalidDataFormatError as e:
+        print(f"Invalid item format: {e}")
 

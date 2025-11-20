@@ -180,7 +180,14 @@ def list_saved_characters(save_directory="data/save_games"):
     # TODO: Implement this function
     # Return empty list if directory doesn't exist
     # Extract character names from filenames
-    pass
+    if not os.path.isdir(save_directory):
+        return []
+    character_names = []
+    for filename in os.listdir(save_directory):
+        if filename.endswith("_save.txt"):
+            name = filename[:-9]
+            character_names.append(name)
+    return character_names
 
 def delete_character(character_name, save_directory="data/save_games"):
     """
@@ -294,27 +301,27 @@ def validate_character_data(character):
 if __name__ == "__main__":
     print("=== CHARACTER MANAGER TEST ===")
     
-    # Test character creation
-    # try:
-    #     char = create_character("TestHero", "Warrior")
-    #     print(f"Created: {char['name']} the {char['class']}")
-    #     print(f"Stats: HP={char['health']}, STR={char['strength']}, MAG={char['magic']}")
-    # except InvalidCharacterClassError as e:
-    #     print(f"Invalid class: {e}")
+    #Test character creation
+    try:
+         char = create_character("TestHero", "Warrior")
+         print(f"Created: {char['NAME']} the {char['CLASS']}")
+         print(f"Stats: HP={char['HEALTH']}, STR={char['STRENGTH']}, MAG={char['MAGIC']}")
+    except InvalidCharacterClassError as e:
+         print(f"Invalid class: {e}")
     
     # Test saving
-    # try:
-    #     save_character(char)
-    #     print("Character saved successfully")
-    # except Exception as e:
-    #     print(f"Save error: {e}")
+    try:
+        save_character(char)
+        print("Character saved successfully")
+    except Exception as e:
+        print(f"Save error: {e}")
     
     # Test loading
-    # try:
-    #     loaded = load_character("TestHero")
-    #     print(f"Loaded: {loaded['name']}")
-    # except CharacterNotFoundError:
-    #     print("Character not found")
-    # except SaveFileCorruptedError:
-    #     print("Save file corrupted")
+    try:
+        loaded = load_character("TestHero")
+        print(f"Loaded: {loaded['NAME']}")
+    except CharacterNotFoundError:
+        print("Character not found")
+    except SaveFileCorruptedError:
+        print("Save file corrupted")
 
