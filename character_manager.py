@@ -200,7 +200,12 @@ def delete_character(character_name, save_directory="data/save_games"):
     """
     # TODO: Implement character deletion
     # Verify file exists before attempting deletion
-    pass
+    filename = f"{character_name}_save.txt"
+    filepath = os.path.join(save_directory, filename)
+    if not os.path.exists(filepath):
+        raise CharacterNotFoundError
+    os.remove(filepath)
+    return True
 
 # ============================================================================
 # CHARACTER OPERATIONS
@@ -225,7 +230,18 @@ def gain_experience(character, xp_amount):
     # Add experience
     # Check for level up (can level up multiple times)
     # Update stats on level up
-    pass
+    if is_character_dead(character):
+        raise CharacterDeadError
+    character["experience"] += xp_amount
+
+    while character["experience"] >= character["level"] * 100:
+        character["experience"] -= character["level"] * 100
+        character["level"] += 1
+        character["max_health"] += 10
+        character["strength"] += 2
+        character["magic"] += 2
+        character["health"] = character["max_health"]
+    return character
 
 def add_gold(character, amount):
     """
@@ -241,7 +257,13 @@ def add_gold(character, amount):
     # TODO: Implement gold management
     # Check that result won't be negative
     # Update character's gold
-    pass
+    current_gold = character.get("gold", 0)
+    new_gold = current_gold + amount
+    if new_gold < 0:
+        raise ValueError("Gold amount canot be negative")
+    character["gold"] = new_gold
+    return new_gold
+    
 
 def heal_character(character, amount):
     """
@@ -254,7 +276,13 @@ def heal_character(character, amount):
     # TODO: Implement healing
     # Calculate actual healing (don't exceed max_health)
     # Update character health
-    pass
+    current_health = character.get("health", 0)
+    max_health = character.get("max_health")
+    healable_amount = max_health - current_health
+    actual_healing = min(amount, healable_amount)
+
+    character["health"] = current_health + actual_healing
+    return actual_healing
 
 def is_character_dead(character):
     """
@@ -263,7 +291,7 @@ def is_character_dead(character):
     Returns: True if dead, False if alive
     """
     # TODO: Implement death check
-    pass
+    return character.get("health", 0) <= 0
 
 def revive_character(character):
     """
@@ -273,7 +301,14 @@ def revive_character(character):
     """
     # TODO: Implement revival
     # Restore health to half of max_health
-    pass
+    if character.get("health", 1) > 0:
+        return True
+    max_health = character.get("max_health")
+    if max_health is None:
+        raise ValueError("charcater is missing 'max_health' attribute")
+    character["health"] = max(1, max_health // 2)
+    return True
+
 
 # ============================================================================
 # VALIDATION
@@ -294,7 +329,26 @@ def validate_character_data(character):
     # Check all required keys exist
     # Check that numeric values are numbers
     # Check that lists are actually lists
-    pass
+    required_feilds = {
+        "name" : str,
+        "class" : str,
+        "level" : int,
+        "health" : int,
+        "max_health" : int,
+        "strength" : int,
+        "magic" : int,
+        "experience" : int,
+        "gold" : int,
+        "inventory" : list,
+        "active_quests" : list,
+        "completed_quests" : list
+    }
+    for feild, expected_types in required_feilds.items():
+        if feild not in character:
+            raise InvalidSaveDataError
+        if not isinstance(character[feild], expected_types):
+            raise InvalidSaveDataError
+    return True
 
 # ============================================================================
 # TESTING
@@ -306,8 +360,8 @@ if __name__ == "__main__":
     #Test character creation
     try:
          char = create_character("TestHero", "Warrior")
-         print(f"Created: {char['NAME']} the {char['CLASS']}")
-         print(f"Stats: HP={char['HEALTH']}, STR={char['STRENGTH']}, MAG={char['MAGIC']}")
+         print(f"Created: {char['name']} the {char['class']}")
+         print(f"Stats: HP={char['health']}, STR={char['strength']}, MAG={char['magic']}")
     except InvalidCharacterClassError as e:
          print(f"Invalid class: {e}")
     
@@ -321,7 +375,7 @@ if __name__ == "__main__":
     # Test loading
     try:
         loaded = load_character("TestHero")
-        print(f"Loaded: {loaded['NAME']}")
+        print(f"Loaded: {loaded['name']}")
     except CharacterNotFoundError:
         print("Character not found")
     except SaveFileCorruptedError:
