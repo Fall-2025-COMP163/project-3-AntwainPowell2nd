@@ -161,7 +161,9 @@ def load_character(character_name, save_directory="data/save_games"):
     character = {}
     try:
         for line in lines:
-            key, value = line.strip().split(":")
+            key, value = line.strip().split(":", 1)
+            key = key.strip().lower()
+            value = value.strip()
 
             if "," in value:
                 character[key] = value.strip().split(",")
