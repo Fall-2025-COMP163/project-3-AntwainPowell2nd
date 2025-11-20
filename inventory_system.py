@@ -199,20 +199,14 @@ def equip_weapon(character, item_id, item_data):
     # Remove item from inventory
     if not has_item(character, item_id):
         raise ItemNotFoundError
-    item_info = item_data.get(item_id)
-    if item_info != "weapon":
+    if item_data is None or item_data.get("type") != "weapon":
         raise InvalidItemTypeError
     old_weapon_id = unequip_weapon(character)
-    if old_weapon_id:
-        old_info = item_data.get(old_weapon_id)
-        stat, value = old_info["EFFECT"].split(":")
-        character["stats"][stat] -= int(value)
-        character["iventory"].append(old_weapon_id)
-    stat, value = item_info["EFFECT"].split(":")
-    character["stats"][stat] += int(value)
-    character["equiped_weapon"] = item_id
+    stat, value = parse_item_effect(item_data["effect"])
+    apply_stat_effect(character, stat, value)
+    character["equipped_weapon"] = item_id
+    character["equipped_weapon_effect"] = (stat, value)
     character["inventory"].remove(item_id)
-    return f"{character['item_id']} equipped {item_info['item_id']} (+{value} {stat})"
 def equip_armor(character, item_id, item_data):
     """
     Equip armor
@@ -252,7 +246,16 @@ def unequip_weapon(character):
     weapon_id = character.get("equipped_weapon")
     if not weapon_id:
         return None
-    weapon_info = item_data.get(weapon_id) 
+    if get_inventory_space_remaining(character) == 0:
+        raise InventoryFullError
+    effect = character.get("equipped_weapon_effect")
+    if effect:
+        stat, value = effect
+        apply_stat_effect(character, stat, -value)
+    character["inventory"].append(weapon_id)
+    character["equipped_weapon"] = None
+    character["equipped_weapon_effect"] = None
+    return weapon_id
 
 def unequip_armor(character):
     """
