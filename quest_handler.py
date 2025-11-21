@@ -16,6 +16,7 @@ from custom_exceptions import (
     QuestNotActiveError,
     InsufficientLevelError
 )
+import character_manager
 
 # ============================================================================
 # QUEST MANAGEMENT
@@ -111,7 +112,20 @@ def complete_quest(character, quest_id, quest_data_dict):
     # Add to completed_quests
     # Grant rewards (use character_manager.gain_experience and add_gold)
     # Return reward summary
-    pass
+    if quest_id not in quest_data_dict:
+        raise QuestNotFoundError
+    if is_quest_active(character, quest_id):
+        raise QuestNotFoundError
+    quest = quest_data_dict[quest_id]
+    character["active_quests"].remove(quest_id)
+    character.setdefault("completed_quests", []).append(quest_id)
+    reward_xp = quest.get("reward_xp", 0)
+    reward_gold = quest.get("reward_gold", 0)
+    character_manager.gain_experience(character, reward_xp)
+    character_manager.add_gold(character, reward_gold)
+    totals = get_total_quest_rewards_earned(character, quest_data_dict)
+    return totals
+
 
 def abandon_quest(character, quest_id):
     """
