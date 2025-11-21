@@ -280,8 +280,8 @@ def get_total_quest_rewards_earned(character, quest_data_dict):
     for quest_id in character.get("completed_quests", []):
         quest = quest_data_dict.get(quest_id)
         if quest:
-            total_xp += quest.get("Reward_XP")
-            total_gold += quest.get("REWARD_GOLD")
+            total_xp += quest.get("reward_xp")
+            total_gold += quest.get("reward_gold")
 
     return {
         "total_xp" : total_xp,
