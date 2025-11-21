@@ -62,7 +62,7 @@ def accept_quest(character, quest_id, quest_data_dict):
     if not can_accept_quest(character, quest_id, quest_data_dict):
         quest = quest_data_dict[quest_id]
         level = character.get("level", 0)
-        required_level = quest.get("REQUIRED_LEVEL", 0)
+        required_level = quest.get("required_level", 0)
 
         if not isinstance(level, int) or not isinstance(required_level, int):
             raise QuestRequirementsNotMetError
@@ -70,7 +70,7 @@ def accept_quest(character, quest_id, quest_data_dict):
         if level < required_level:
             raise InsufficientLevelError(f"Level {required_level} required.")
 
-        prereq = quest.get("PREREQUISITE")
+        prereq = quest.get("prerequisite")
         if prereq and prereq != "NONE" and prereq not in character.get("completed_quests", []):
             raise QuestRequirementsNotMetError
 
@@ -193,11 +193,11 @@ def can_accept_quest(character, quest_id, quest_data_dict):
     quest = quest_data_dict.get(quest_id)
     if not quest:
         return False
-    required_level = quest.get("REQUIRED_LEVEL")
+    required_level = quest.get("required_level")
     if character.get("level") < required_level:
         return False
-    prerequisite = quest.get("PREREQUISITE")
-    if prerequisite and prerequisite not in character.get("completed_quests"):
+    prerequisite = quest.get("prerequisite")
+    if prerequisite and prerequisite != "NONE" and prerequisite not in character.get("completed_quests"):
         return False
     return True
 
