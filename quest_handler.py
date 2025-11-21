@@ -114,9 +114,11 @@ def complete_quest(character, quest_id, quest_data_dict):
     # Return reward summary
     if quest_id not in quest_data_dict:
         raise QuestNotFoundError
-    if is_quest_active(character, quest_id):
+    if not is_quest_active(character, quest_id):
         raise QuestNotFoundError
     quest = quest_data_dict[quest_id]
+    if not quest:
+        raise QuestNotFoundError
     character["active_quests"].remove(quest_id)
     character.setdefault("completed_quests", []).append(quest_id)
     reward_xp = quest.get("reward_xp", 0)
