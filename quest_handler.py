@@ -339,7 +339,7 @@ def validate_quest_prerequisites(quest_data_dict):
     # Ensure prerequisite exists in quest_data_dict
     for quest_id, quest_data in quest_data_dict.items():
         prerequisite = quest_data.get("PREREQUISITE")
-        if prerequisite and prerequisite != None:
+        if prerequisite and prerequisite != "None":
             if prerequisite not in quest_data_dict:
                 raise QuestNotFoundError
     return True
