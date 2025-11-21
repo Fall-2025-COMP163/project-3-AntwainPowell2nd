@@ -50,7 +50,7 @@ def accept_quest(character, quest_id, quest_data_dict):
     # Check not already completed
     # Check not already active
     # Add to character['active_quests']
-    pass
+    
 
 def complete_quest(character, quest_id, quest_data_dict):
     """
@@ -132,7 +132,9 @@ def is_quest_completed(character, quest_id):
     Returns: True if completed, False otherwise
     """
     # TODO: Implement completion check
-    pass
+    if quest_id not in character["completed_quests"]:
+        return False
+    return False
 
 def is_quest_active(character, quest_id):
     """
@@ -141,7 +143,9 @@ def is_quest_active(character, quest_id):
     Returns: True if active, False otherwise
     """
     # TODO: Implement active check
-    pass
+    if quest_id not in character["active_quests"]:
+        return False
+    return True
 
 def can_accept_quest(character, quest_id, quest_data_dict):
     """
@@ -152,7 +156,16 @@ def can_accept_quest(character, quest_id, quest_data_dict):
     """
     # TODO: Implement requirement checking
     # Check all requirements without raising exceptions
-    pass
+    quest = quest_data_dict.get(quest_id)
+    if not quest:
+        return False
+    required_level = quest.get("REQUIRED_LEVEL")
+    if character.get("level") < required_level:
+        return False
+    prerequisite = quest.get("PREREQUISITE")
+    if prerequisite and prerequisite not in character.get("completed_quests"):
+        return False
+    return True
 
 def get_quest_prerequisite_chain(quest_id, quest_data_dict):
     """
@@ -167,7 +180,25 @@ def get_quest_prerequisite_chain(quest_id, quest_data_dict):
     # TODO: Implement prerequisite chain tracing
     # Follow prerequisite links backwards
     # Build list in reverse order
-    pass
+    if quest_id not in quest_data_dict:
+        raise QuestNotFoundError
+    chain = []
+    visited = ()
+    current_id = quest_id
+    while current_id:
+        if current_id in visited:
+            raise ValueError
+        visited.add(current_id)
+        quest = quest_data_dict.get(current_id)
+        if not quest:
+            raise QuestNotFoundError
+        prerequisite = quest_data_dict.get("PREREQUISITE")
+        if prerequisite:
+            chain.insert(0, prerequisite)
+        current_id = prerequisite
+    chain.append(current_id)
+    return chain
+
 
 # ============================================================================
 # QUEST STATISTICS
@@ -183,7 +214,10 @@ def get_quest_completion_percentage(character, quest_data_dict):
     # total_quests = len(quest_data_dict)
     # completed_quests = len(character['completed_quests'])
     # percentage = (completed / total) * 100
-    pass
+    total_quests = len(quest_data_dict)
+    complete_quests = len(character["completed_quests"])
+    percentage = (complete_quests / total_quests) * 100
+    return percentage
 
 def get_total_quest_rewards_earned(character, quest_data_dict):
     """
@@ -193,7 +227,20 @@ def get_total_quest_rewards_earned(character, quest_data_dict):
     """
     # TODO: Implement reward calculation
     # Sum up reward_xp and reward_gold for all completed quests
-    pass
+    total_xp = 0
+    total_gold = 0
+    for quest_id in character.get("completed_quests", []):
+        quest = quest_data_dict.get(quest_id)
+        if quest:
+            total_xp += quest.get("Reward_XP")
+            total_gold += quest.get("REWARD_GOLD")
+
+    return {
+        "total_xp" : total_xp,
+        "total_gold" : total_gold
+    }
+
+    
 
 def get_quests_by_level(quest_data_dict, min_level, max_level):
     """
@@ -202,7 +249,11 @@ def get_quests_by_level(quest_data_dict, min_level, max_level):
     Returns: List of quest dictionaries
     """
     # TODO: Implement level filtering
-    pass
+    return [
+        quest for quest in quest_data_dict.values()
+        if min_level <= quest.get("required_level", quest.get("REQUIRED_LEVEL", 0)) <= max_level
+    ]
+
 
 # ============================================================================
 # DISPLAY FUNCTIONS
@@ -217,8 +268,9 @@ def display_quest_info(quest_data):
     # TODO: Implement quest display
     print(f"\n=== {quest_data['title']} ===")
     print(f"Description: {quest_data['description']}")
-    # ... etc
-    pass
+    print(f"Rewards: {quest_data['rewards']}")
+    print(f"Requirements: {quest_data['requirements']}")
+    
 
 def display_quest_list(quest_list):
     """
@@ -227,7 +279,18 @@ def display_quest_list(quest_list):
     Shows: Title, Required Level, Rewards
     """
     # TODO: Implement quest list display
-    pass
+    if not quest_list:
+        print("No quests avaliable")
+        return
+    print(f"{'Title':<30} {'Level':<10} {'Rewards'}")
+    print("-" * 60)
+
+    for quest in quest_list:
+        title = quest.get("title", "unknown")
+        level = quest.get("level", "N/A")
+        rewards = ",".join(quest.get("rewards", []))
+        print(f"{title:<30} {level:<10} {rewards}")
+    
 
 def display_character_quest_progress(character, quest_data_dict):
     """
@@ -240,7 +303,23 @@ def display_character_quest_progress(character, quest_data_dict):
     - Total rewards earned
     """
     # TODO: Implement progress display
-    pass
+    total_active_quests = len(character["active_quests"])
+    total_completed_quests = len(character["completed_quests"])
+    completion_percentage = get_quest_completion_percentage(character, quest_data_dict)
+    total_rewards = []
+    for quest_id in character["completed_quests"]:
+        quest = quest_data_dict.get(quest_id)
+        if quest and "rewards" in quest:
+            total_rewards.extend(quest["rewards"])
+    print("=== Quest Progress Summary ===")
+    print(f"Active Quests: {total_active_quests}")
+    print(f"Completed Quests: {total_completed_quests}")
+    print(f"Completion: {completion_percentage:.2f}%")
+    print(f"Total Rewards Earned: {', '.join(total_rewards) if total_rewards else 'None'}")
+
+
+
+
 
 # ============================================================================
 # VALIDATION
@@ -258,7 +337,12 @@ def validate_quest_prerequisites(quest_data_dict):
     # TODO: Implement prerequisite validation
     # Check each quest's prerequisite
     # Ensure prerequisite exists in quest_data_dict
-    pass
+    for quest_id, quest_data in quest_data_dict.items():
+        prerequisite = quest_data.get("PREREQUISITE")
+        if prerequisite and prerequisite != None:
+            if prerequisite not in quest_data_dict:
+                raise QuestNotFoundError
+    return True
 
 
 # ============================================================================
@@ -269,29 +353,29 @@ if __name__ == "__main__":
     print("=== QUEST HANDLER TEST ===")
     
     # Test data
-    # test_char = {
-    #     'level': 1,
-    #     'active_quests': [],
-    #     'completed_quests': [],
-    #     'experience': 0,
-    #     'gold': 100
-    # }
+    test_char = {
+        'level': 1,
+        'active_quests': [],
+        'completed_quests': [],
+        'experience': 0,
+        'gold': 100
+    }
     #
-    # test_quests = {
-    #     'first_quest': {
-    #         'quest_id': 'first_quest',
-    #         'title': 'First Steps',
-    #         'description': 'Complete your first quest',
-    #         'reward_xp': 50,
-    #         'reward_gold': 25,
-    #         'required_level': 1,
-    #         'prerequisite': 'NONE'
-    #     }
-    # }
+    test_quests = {
+        'first_quest': {
+            'quest_id': 'first_quest',
+            'title': 'First Steps',
+            'description': 'Complete your first quest',
+            'reward_xp': 50,
+            'reward_gold': 25,
+            'required_level': 1,
+            'prerequisite': 'NONE'
+        }
+    }
     #
-    # try:
-    #     accept_quest(test_char, 'first_quest', test_quests)
-    #     print("Quest accepted!")
-    # except QuestRequirementsNotMetError as e:
-    #     print(f"Cannot accept: {e}")
+    try:
+        accept_quest(test_char, 'first_quest', test_quests)
+        print("Quest accepted!")
+    except QuestRequirementsNotMetError as e:
+        print(f"Cannot accept: {e}")
 
