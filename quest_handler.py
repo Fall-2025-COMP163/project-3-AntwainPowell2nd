@@ -50,7 +50,7 @@ def accept_quest(character, quest_id, quest_data_dict):
     # Check not already completed
     # Check not already active
     # Add to character['active_quests']
-    if quest_id not in quest_data_dict[quest_id]:
+    if quest_id not in quest_data_dict:
         raise QuestNotFoundError
 
     if is_quest_completed(character, quest_id):
