@@ -70,7 +70,7 @@ def accept_quest(character, quest_id, quest_data_dict):
             raise QuestRequirementsNotMetError
 
         if level < required_level:
-            raise InsufficientLevelError(f"Level {required_level} required.")
+            raise InsufficientLevelError
 
         prereq = quest.get("prerequisite")
         if prereq and prereq != "NONE" and prereq not in character.get("completed_quests", []):
