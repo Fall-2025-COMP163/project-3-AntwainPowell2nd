@@ -346,7 +346,7 @@ if __name__ == "__main__":
     except InvalidDataFormatError as e:
         print(f"Invalid item format: {e}")
     
-    quest = {
+quest = {
     "quest_id": "quest_001",
     "title": "First Steps",
     "description": "Defeat 5 slimes in the forest.",
