@@ -15,6 +15,7 @@ from custom_exceptions import (
     QuestAlreadyCompletedError,
     QuestNotActiveError,
     InsufficientLevelError
+
 )
 import character_manager
 
@@ -115,7 +116,7 @@ def complete_quest(character, quest_id, quest_data_dict):
     if quest_id not in quest_data_dict:
         raise QuestNotFoundError
     if not is_quest_active(character, quest_id):
-        raise QuestNotFoundError
+        raise QuestNotActiveError
     quest = quest_data_dict[quest_id]
     if not quest:
         raise QuestNotFoundError
