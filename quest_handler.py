@@ -205,17 +205,26 @@ def can_accept_quest(character, quest_id, quest_data_dict):
     Does NOT raise exceptions - just returns boolean
     """
     # TODO: Implement requirement checking
-    # Check all requirements without raising exceptions
     quest = quest_data_dict.get(quest_id)
     if not quest:
         return False
-    required_level = int(quest.get("required_level"))
-    if int(character.get("level")) < required_level:
+
+    try:
+        required_level = int(quest.get("required_level", 0))
+    except (TypeError, ValueError):
         return False
+
+    if int(character.get("level", 0)) < required_level:
+        return False
+
     prerequisite = quest.get("prerequisite")
-    if prerequisite and prerequisite != "NONE" and prerequisite not in character.get("completed_quests"):
-        return False
+    if prerequisite and prerequisite != "NONE":
+        completed = character.get("completed_quests", [])
+        if prerequisite not in completed:
+            return False
+
     return True
+
 
 def get_quest_prerequisite_chain(quest_id, quest_data_dict):
     """
