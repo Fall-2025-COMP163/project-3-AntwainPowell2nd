@@ -209,8 +209,8 @@ def can_accept_quest(character, quest_id, quest_data_dict):
     quest = quest_data_dict.get(quest_id)
     if not quest:
         return False
-    required_level = quest.get("required_level")
-    if character.get("level") < required_level:
+    required_level = int(quest.get("required_level"))
+    if int(character.get("level")) < required_level:
         return False
     prerequisite = quest.get("prerequisite")
     if prerequisite and prerequisite != "NONE" and prerequisite not in character.get("completed_quests"):
