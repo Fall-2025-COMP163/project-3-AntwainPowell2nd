@@ -15,6 +15,7 @@ from custom_exceptions import (
     InsufficientResourcesError,
     InvalidItemTypeError
 )
+from collections import Counter
 
 # Maximum inventory size
 MAX_INVENTORY_SIZE = 20
@@ -229,7 +230,34 @@ def equip_armor(character, item_id, item_data):
     """
     # TODO: Implement armor equipping
     # Similar to equip_weapon but for armor
-    pass
+    inventory = character.get("inventory", [])
+
+    if item_id not in inventory:
+        raise ItemNotFoundError
+    
+    if item_data.get("type") != "armor":
+        raise InvalidItemTypeError
+    
+    if character.get("equipped_armor"):
+        old_armor = unequip_armor(character)
+
+        old_itme_data = item_data.get("effects_removed", {})
+
+        if "effect" in item_data:
+            stat, value = item_data["effect"].split(":")
+            character[stat] = character.get(stat, 0) - int(value)
+    inventory.remove(item_id)
+    character["equipped_armor"] = item_id
+
+    effect = item_data.get("effect")
+    if effect:
+        try:
+            stat, value = effect.split(":")
+            character[stat] = character.get(stat, 0) + int(value)
+        except ValueError:
+            pass
+
+    return f"Equipped {item_data.get("name", item_data)} as armor"
 
 def unequip_weapon(character):
     """
@@ -265,7 +293,20 @@ def unequip_armor(character):
     Raises: InventoryFullError if inventory is full
     """
     # TODO: Implement armor unequipping
-    pass
+    equipped_armor = character.get("equiped_armor")
+    inventory = character.get("inventory", [])
+
+    if not equip_armor:
+        return None
+    
+    if len(inventory) >= MAX_INVENTORY_SIZE:
+        raise InventoryFullError
+    
+    inventory.append(equipped_armor)
+    character["inventory"] = inventory
+    character["equip_armor"] = None
+
+    return equipped_armor
 
 # ============================================================================
 # SHOP SYSTEM
@@ -290,7 +331,20 @@ def purchase_item(character, item_id, item_data):
     # Check if inventory has space
     # Subtract gold from character
     # Add item to inventory
-    pass
+    gold = int(character.get("gold", 0))
+    inventory = character.get("inventory", [])
+    cost = int(item_data.get("cost", 0))
+
+    if gold < cost:
+        raise InsufficientResourcesError
+    if len(inventory) >= MAX_INVENTORY_SIZE:
+        raise InventoryFullError
+    
+    character[gold] = gold - cost
+    inventory.append(item_id)
+    character["inventory"] = inventory
+    
+    return True
 
 def sell_item(character, item_id, item_data):
     """
@@ -309,8 +363,20 @@ def sell_item(character, item_id, item_data):
     # Calculate sell price (cost // 2)
     # Remove item from inventory
     # Add gold to character
-    pass
+    inventory = character.get("inventory", [])
+    gold = int(character.get("gold", 0))
 
+    if item_id not in inventory:
+        raise ItemNotFoundError
+    
+    cost = item_data.get("cost", 0)
+    sell_price = cost // 2
+
+    inventory.remove(item_id)
+    character["inventory"] = inventory
+    character["gold"] = gold + sell_price
+
+    return f"+{sell_price} gold"
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
@@ -370,8 +436,17 @@ def display_inventory(character, item_data_dict):
     # TODO: Implement inventory display
     # Count items (some may appear multiple times)
     # Display with item names from item_data_dict
-    pass
-
+    inventory = character.get("inventory", [])
+    if not inventory:
+        print("Inventory is empty.")
+        return
+    item_counts = Counter(inventory)
+    print("=== INVENTORY ===")
+    for item_id, count in item_counts.items():
+        item_info = item_data_dict.get(item_id, {})
+        name = item_info.get("name", str(item_id))
+        item_type = item_info.get("type", "Unknown")
+        print(f"{name} ({item_type}) x{count}")
 # ============================================================================
 # TESTING
 # ============================================================================
