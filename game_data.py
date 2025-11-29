@@ -57,7 +57,7 @@ def load_quests(filename="data/quests.txt"):
                 if ":" not in line:
                     raise InvalidDataFormatError
                 key, value = line.split(":", 1)
-                quest_data[key.strip().lower] = value.strip()
+                quest_data[key.strip().lower()] = value.strip()
             required_keys = [
                 "quest_id", "title", "description", 
                 "reward_xp", "reward_gold",
