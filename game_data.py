@@ -59,9 +59,9 @@ def load_quests(filename="data/quests.txt"):
                 key, value = line.split(":", 1)
                 quest_data[key.strip()] = value.strip()
             required_keys = [
-                "quest_id", "title", "description",
-                "reward_xp", "reward_gold",
-                "required_level", "prerequisite"
+                "QUEST_ID", "TITLE", "DESCRIPTION",
+                "REWARD_XP", "REWARD_GOLD",
+                "REQUIRED_LEVEL", "PREREQUISITE"
             ]
             for key in required_keys:
                 if key not in quest_data: 
