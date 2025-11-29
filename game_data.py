@@ -59,20 +59,20 @@ def load_quests(filename="data/quests.txt"):
                 key, value = line.split(":", 1)
                 quest_data[key.strip()] = value.strip()
             required_keys = [
-                "QUEST_ID", "TITLE", "DESCRIPTION",
-                "REWARD_XP", "REWARD_GOLD",
-                "REQUIRED_LEVEL", "PREREQUISITE"
+                "quest_id", "title", "description",
+                "reward_xp", "reward_gold",
+                "required_level", "prerequisite"
             ]
             for key in required_keys:
                 if key not in quest_data: 
                     raise InvalidDataFormatError
             try:
-                quest_data["REWARD_XP"] = int(quest_data["REWARD_XP"])
-                quest_data["REWARD_GOLD"] = int(quest_data["REWARD_GOLD"])
-                quest_data["REQUIRED_LEVEL"] = int(quest_data["REQUIRED_LEVEL"])
+                quest_data["reward_xp"] = int(quest_data["reward_xp"])
+                quest_data["reward_gold"] = int(quest_data["reward_gold"])
+                quest_data["required_level"] = int(quest_data["required_level"])
             except ValueError:
                 raise InvalidDataFormatError
-            quest_id = quest_data["QUEST_ID"]
+            quest_id = quest_data["quest_id"]
             quests[quest_id] = quest_data
         except Exception as e:
             if isinstance(e, (InvalidDataFormatError,)):
