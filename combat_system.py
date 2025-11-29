@@ -158,7 +158,7 @@ class SimpleBattle:
         # Display options
         # Get player choice
         # Execute chosen action
-        if not self.check_battle_end():
+        if self.combat_active:
             print("\nPlayer's Turn:")
             print("1. Basic Attack")
             print("2. Special Ability")
@@ -183,6 +183,8 @@ class SimpleBattle:
                     self.display_battle_log("Escape failed! The battle continues.")
             else:
                 self.display_battle_log("Invalid choice! You lose your turn.")
+        else:
+            raise CombatNotActiveError()
     
     def enemy_turn(self):
         """
