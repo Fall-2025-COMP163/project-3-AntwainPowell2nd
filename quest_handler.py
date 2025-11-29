@@ -55,31 +55,26 @@ def accept_quest(character, quest_id, quest_data_dict):
     if quest_id not in quest_data_dict:
         raise QuestNotFoundError
 
-    if is_quest_completed(character, quest_id):
+    if quest_id in character.get("completed_quests", []):
         raise QuestAlreadyCompletedError
 
-    if is_quest_active(character, quest_id):
-        raise QuestRequirementsNotMetError
+    if quest_id in character.get("active_quests", []):
+        raise QuestNotActiveError
 
-    if not can_accept_quest(character, quest_id, quest_data_dict):
-        quest = quest_data_dict[quest_id]
-        level = character.get("level", 0)
-        required_level = quest.get("required_level", 0)
+    quest = quest_data_dict[quest_id]
+    level = character.get("level", 0)
+    required_level = quest.get("required_level", 0)
 
-        if not isinstance(level, int) or not isinstance(required_level, int):
-            raise QuestRequirementsNotMetError
+    if level < required_level:
+        raise InsufficientLevelError
 
-        if level < required_level:
-            raise InsufficientLevelError
-
-        prereq = quest.get("prerequisite")
-        if prereq and prereq != "NONE" and prereq not in character.get("completed_quests", []):
-            raise QuestRequirementsNotMetError
-
+    prereq = quest.get("prerequisite")
+    if prereq and prereq != "NONE" and prereq not in character.get("completed_quests", []):
         raise QuestRequirementsNotMetError
 
     character.setdefault("active_quests", []).append(quest_id)
     return True
+
 
 
 
@@ -223,9 +218,8 @@ def is_quest_completed(character, quest_id):
     Returns: True if completed, False otherwise
     """
     # TODO: Implement completion check
-    if quest_id not in character["completed_quests"]:
-        return False
-    return False
+    return quest_id in character.get("completed_quests", [])
+
 
 def is_quest_active(character, quest_id):
     """
