@@ -115,16 +115,16 @@ def load_items(filename="data/items.txt"):
         try:
             for line in lines:
                 key, value = line.split(":", 1)
-                key = key.strip().upper()
+                key = key.strip().lower()
                 value = value.strip()
 
-                if key == "ITEM_ID":
+                if key == "item_id":
                     item_id = value
-                elif key == "EFFECT":
+                elif key == "effect":
                     stat, val = value.split(":")
-                    item_content["EFFECT"] = {stat.strip(): int(val.strip())}
-                elif key == "COST":
-                    item_content["COST"] = int(value)
+                    item_content["effect"] = {stat.strip(): int(val.strip())}
+                elif key == "cost":
+                    item_content["cost"] = int(value)
                 else:
                     item_content[key] = value 
             if not item_id:
