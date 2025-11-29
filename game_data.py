@@ -120,6 +120,7 @@ def load_items(filename="data/items.txt"):
 
                 if key == "item_id":
                     item_id = value
+                    item_content["item_id"] = item_id
                 elif key == "effect":
                     stat, val = value.split(":")
                     item_content["effect"] = {stat.strip(): int(val.strip())}
