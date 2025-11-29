@@ -67,9 +67,9 @@ def load_quests(filename="data/quests.txt"):
                 if key not in quest_data: 
                     raise InvalidDataFormatError
             try:
-                quest_data["reward_xp"] = int(quest_data["reward_xp"])
-                quest_data["reward_gold"] = int(quest_data["reward_gold"])
-                quest_data["required_level"] = int(quest_data["required_level"])
+                quest_data["reward_xp"] = int(quest_data["REWARD_XP"])
+                quest_data["reward_gold"] = int(quest_data["REWARD_GOLD"])
+                quest_data["required_level"] = int(quest_data["REQUIRED_LEVEL"])
             except ValueError:
                 raise InvalidDataFormatError
             quest_id = quest_data["quest_id"]
