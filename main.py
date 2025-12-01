@@ -512,7 +512,11 @@ def save_game():
     # TODO: Implement save
     # Use character_manager.save_character()
     # Handle any file I/O exceptions
-    pass
+    try:
+        character_manager.save_character(current_character)
+        print("Game saved successfully.")
+    except (OSError, IOError) as e:
+        print(f"Error saving game: {e}")
 
 def load_game_data():
     """Load all quest and item data from files"""
@@ -523,7 +527,21 @@ def load_game_data():
     # Try to load items with game_data.load_items()
     # Handle MissingDataFileError, InvalidDataFormatError
     # If files missing, create defaults with game_data.create_default_data_files()
-    pass
+    try:
+        all_quests = game_data.load_quests("data/quests.txt")
+        all_items = game_data.load_items("data/items.txt")
+        print("Game data loaded successfully.")
+    except MissingDataFileError:
+        print("Data files missing. Creating default data files...")
+        game_data.create_default_data_files()
+        all_quests = game_data.load_quests("data/quests.txt")
+        all_items = game_data.load_items("data/items.txt")
+    except InvalidDataFormatError as e:
+        print(f"Invalid data format: {e}")
+        all_quests, all_items = {}, {}
+    except CorruptedDataError as e:
+        print(f"Data file corrupted: {e}")
+        all_quests, all_items = {}, {}
 
 def handle_character_death():
     """Handle character death"""
@@ -534,7 +552,27 @@ def handle_character_death():
     # Offer: Revive (costs gold) or Quit
     # If revive: use character_manager.revive_character()
     # If quit: set game_running = False
-    pass
+    print("\n=== You have died! ===")
+    print("Options:")
+    print("1. Revive (costs 50 gold)")
+    print("2. Quit game")
+    
+    choice = input("Choose an option: ").strip()
+    
+    if choice == "1":
+        if current_character.get("gold", 0) >= 50:
+            current_character["gold"] -= 50
+            character_manager.revive_character(current_character)
+            print("You have been revived!")
+        else:
+            print("Not enough gold to revive. Game over.")
+            game_running = False
+    elif choice == "2":
+        print("Quitting game...")
+        game_running = False
+    else:
+        print("Invalid choice. Defaulting to quit.")
+        game_running = False
 
 def display_welcome():
     """Display welcome message"""
