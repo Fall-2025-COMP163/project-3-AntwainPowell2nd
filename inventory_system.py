@@ -341,7 +341,7 @@ def purchase_item(character, item_id, item_data):
     if len(inventory) >= MAX_INVENTORY_SIZE:
         raise InventoryFullError
     
-    character[gold] = gold - cost
+    character[gold] -= cost
     inventory.append(item_id)
     character["inventory"] = inventory
     
