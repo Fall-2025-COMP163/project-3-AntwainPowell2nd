@@ -172,6 +172,7 @@ def use_item(character, item_id, item_data):
     apply_stat_effect(character, stat_name, value)
     character['inventory'].remove(item_id)
     return f"{item_id} used to increase {stat_name} by {value}"
+
 def equip_weapon(character, item_id, item_data):
     """
     Equip a weapon
