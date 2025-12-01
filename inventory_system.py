@@ -377,7 +377,7 @@ def sell_item(character, item_id, item_data):
     character["inventory"] = inventory
     character["gold"] = gold + sell_price
 
-    return f"+{sell_price} gold"
+    return sell_price
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
