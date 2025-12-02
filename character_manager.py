@@ -22,7 +22,7 @@ from custom_exceptions import (
 # CHARACTER MANAGEMENT FUNCTIONS
 # ============================================================================
 
-def create_character(name, character_class):
+def create_character(name, character_class): # creates a new character and validates classes 
     """
     Create a new character with stats based on class
     
@@ -76,7 +76,7 @@ def create_character(name, character_class):
 
 
 
-def save_character(character, save_directory="data/save_games"):
+def save_character(character, save_directory="data/save_games"): # saves character data to a file
     """
     Save character to file
     
@@ -130,7 +130,7 @@ def save_character(character, save_directory="data/save_games"):
 
  
 
-def load_character(character_name, save_directory="data/save_games"):
+def load_character(character_name, save_directory="data/save_games"): # loads character data from a file
     """
     Load character from save file
     
@@ -173,7 +173,7 @@ def load_character(character_name, save_directory="data/save_games"):
         raise InvalidSaveDataError
     return character
 
-def list_saved_characters(save_directory="data/save_games"):
+def list_saved_characters(save_directory="data/save_games"): # lists all saved character names in the save directory
     """
     Get list of all saved character names
     
@@ -191,7 +191,7 @@ def list_saved_characters(save_directory="data/save_games"):
             character_names.append(name)
     return character_names
 
-def delete_character(character_name, save_directory="data/save_games"):
+def delete_character(character_name, save_directory="data/save_games"): # deletes a character's save file
     """
     Delete a character's save file
     
@@ -211,7 +211,7 @@ def delete_character(character_name, save_directory="data/save_games"):
 # CHARACTER OPERATIONS
 # ============================================================================
 
-def gain_experience(character, xp_amount):
+def gain_experience(character, xp_amount): # adds experience and handles level ups
     """
     Add experience to character and handle level ups
     
@@ -243,7 +243,7 @@ def gain_experience(character, xp_amount):
         character["health"] = character["max_health"]
     return character
 
-def add_gold(character, amount):
+def add_gold(character, amount): # this adds gold to the character's inventory
     """
     Add gold to character's inventory
     
@@ -265,7 +265,7 @@ def add_gold(character, amount):
     return new_gold
     
 
-def heal_character(character, amount):
+def heal_character(character, amount): # heals the character by a specified amount
     """
     Heal character by specified amount
     
@@ -284,7 +284,7 @@ def heal_character(character, amount):
     character["health"] = current_health + actual_healing
     return actual_healing
 
-def is_character_dead(character):
+def is_character_dead(character): # checks if the character is dead meaning health is 0 or below
     """
     Check if character's health is 0 or below
     
@@ -293,7 +293,7 @@ def is_character_dead(character):
     # TODO: Implement death check
     return character.get("health", 0) <= 0
 
-def revive_character(character):
+def revive_character(character): # revives a dead character with 50% health
     """
     Revive a dead character with 50% health
     
@@ -314,7 +314,7 @@ def revive_character(character):
 # VALIDATION
 # ============================================================================
 
-def validate_character_data(character):
+def validate_character_data(character): # validates that the character data has all required fields and correct types
     """
     Validate that character dictionary has all required fields
     

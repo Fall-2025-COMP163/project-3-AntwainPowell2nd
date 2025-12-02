@@ -32,7 +32,7 @@ game_running = False
 # MAIN MENU
 # ============================================================================
 
-def main_menu():
+def main_menu(): # displays the main menu and gets player choice
     """
     Display main menu and get player choice
     
@@ -61,7 +61,7 @@ def main_menu():
         print("Invalid input. Please enter a number (1-3).")
         return main_menu()
 
-def new_game():
+def new_game(): # starts a new game by creating a character
     """
     Start a new game
     
@@ -97,7 +97,7 @@ def new_game():
     
 
 
-def load_game():
+def load_game(): # loads an existing saved game by selecting a character
     """
     Load an existing saved game
     
@@ -151,7 +151,7 @@ def load_game():
 # GAME LOOP
 # ============================================================================
 
-def game_loop():
+def game_loop(): # main game loop after character is created/loaded
     """
     Main game loop - shows game menu and processes actions
     """
@@ -187,7 +187,7 @@ def game_loop():
 
 
 
-def game_menu():
+def game_menu(): # displays the game menu and gets player choice
     """
     Display game menu and get player choice
     
@@ -225,7 +225,7 @@ def game_menu():
 # HELPER FUNCTIONS
 # ============================================================================
 
-def save_game():
+def save_game(): # saves the current game state
     """Save current game state"""
     global current_character
     
@@ -238,7 +238,7 @@ def save_game():
     except (OSError, IOError) as e:
         print(f"Error saving game: {e}")
 
-def load_game_data():
+def load_game_data(): # loads all game data from files
     """Load all quest and item data from files"""
     global all_quests, all_items
     
@@ -263,7 +263,7 @@ def load_game_data():
         print(f"Data file corrupted: {e}")
         all_quests, all_items = {}, {}
 
-def handle_character_death():
+def handle_character_death(): # gives options upon character death
     """Handle character death"""
     global current_character, game_running
     
@@ -294,7 +294,7 @@ def handle_character_death():
         print("Invalid choice. Defaulting to quit.")
         game_running = False
 
-def display_welcome():
+def display_welcome(): # displays the welcome message
     """Display welcome message"""
     print("=" * 50)
     print("     QUEST CHRONICLES - A MODULAR RPG ADVENTURE")
@@ -307,7 +307,7 @@ def display_welcome():
 # GAME ACTIONS
 # ============================================================================
 
-def view_character_stats():
+def view_character_stats(): # displays the current character's stats
     """Display character information"""
     global current_character
     
@@ -344,7 +344,7 @@ def view_character_stats():
         print(f"  Error retrieving quests: {e}")
 
 
-def view_inventory():
+def view_inventory(): # displays and manages the current character's inventory
     """Display and manage inventory"""
     global current_character, all_items
     
@@ -418,7 +418,7 @@ def view_inventory():
             print(f"Error: {e}")
 
 
-def quest_menu():
+def quest_menu(): # gives access to quest management and grabs player choice
     """Quest management menu"""
     global current_character, all_quests
     
@@ -497,7 +497,7 @@ def quest_menu():
         except Exception as e:
             print(f"Error: {e}")
 
-def explore():
+def explore(): # allows the player to explore and find random battles
     """Find and fight random enemies"""
     global current_character
     
@@ -528,7 +528,7 @@ def explore():
         print(f"Error during exploration: {e}")
     
 
-def shop():
+def shop(): # allows the player to buy/sell items in a shop
     """Shop menu for buying/selling items"""
     global current_character, all_items
     

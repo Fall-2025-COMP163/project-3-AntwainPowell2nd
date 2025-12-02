@@ -20,7 +20,7 @@ from custom_exceptions import (
 # DATA LOADING FUNCTIONS
 # ============================================================================
 
-def load_quests(filename="data/quests.txt"):
+def load_quests(filename="data/quests.txt"): # loads quest data from a text file
     """
     Load quest data from file
     
@@ -83,7 +83,7 @@ def load_quests(filename="data/quests.txt"):
 
     
 
-def load_items(filename="data/items.txt"):
+def load_items(filename="data/items.txt"): # loads item data from a text file
     """
     Load item data from file
     
@@ -135,7 +135,7 @@ def load_items(filename="data/items.txt"):
             raise InvalidDataFormatError
     return items
 
-def validate_quest_data(quest_dict):
+def validate_quest_data(quest_dict): # validates that the quest data has all required fields and correct types
     """
     Validate that quest dictionary has all required fields
     
@@ -168,7 +168,7 @@ def validate_quest_data(quest_dict):
             raise InvalidDataFormatError
     return True
 
-def validate_item_data(item_dict):
+def validate_item_data(item_dict): # validates that the item data has all required fields and correct types
     """
     Validate that item dictionary has all required fields
     
@@ -196,7 +196,7 @@ def validate_item_data(item_dict):
         raise InvalidDataFormatError
     return True
 
-def create_default_data_files():
+def create_default_data_files(): # creates default data files if they don't exist
     """
     Create default data files if they don't exist
     This helps with initial setup and testing
@@ -254,7 +254,7 @@ def create_default_data_files():
 # HELPER FUNCTIONS
 # ============================================================================
 
-def parse_quest_block(lines):
+def parse_quest_block(lines): # parses a block of lines into a quest dictionary
     """
     Parse a block of lines into a quest dictionary
     
@@ -290,7 +290,7 @@ def parse_quest_block(lines):
 
 
 
-def parse_item_block(lines):
+def parse_item_block(lines): # parses a block of lines into an item dictionary
     """
     Parse a block of lines into an item dictionary
     

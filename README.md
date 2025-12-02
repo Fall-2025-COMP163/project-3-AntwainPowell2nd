@@ -123,15 +123,15 @@ This project encourages creativity! Here's what you can customize:
 
 **Note:** Creativity is encouraged, but functionality comes first! A working game with required features scores higher than a broken game with lots of extras.
 
-### Update README.md
+### Updated README.md by Aj
 
 Document your project with:
 
-1. **Module Architecture:** Explain your module organization
-2. **Exception Strategy:** Describe when/why you raise specific exceptions
-3. **Design Choices:** Justify major decisions
-4. **AI Usage:** Detail what AI assistance you used
-5. **How to Play:** Instructions for running the game
+1. **Module Architecture:** Most of the moduling(exceptions) were finished for me but when I needed to import somthing I just added it under the paer where the eceptions wher imported from custom_exceptions
+2. **Exception Strategy:** Th exceptios were mostly used to identify when a part of my code is missing something or when somthig does not mathc the rest of the code. For example a mispelled key or data file not being there or corrupeted  
+3. **Design Choices:** I just wanted ot keep is basic and alos I dont have the knowhow to make the game desighn fancy. also I wanted to get the game functional and then make it prety 
+4. **AI Usage:** Ai helped me find a Module to count hashable obkects within a dictionary for inventory
+5. **How to Play:** the only thing you would be inputing are numbers corosponding to you chosn descision. accept quests, level up, defeate monsters, complete quests, and beat the game, have fun! 
 
 ### What to Submit:
 

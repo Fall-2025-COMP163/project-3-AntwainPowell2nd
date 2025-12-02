@@ -23,7 +23,7 @@ import character_manager
 # QUEST MANAGEMENT
 # ============================================================================
 
-def accept_quest(character, quest_id, quest_data_dict):
+def accept_quest(character, quest_id, quest_data_dict): # accept a new quest
     """
     Accept a new quest
     
@@ -80,14 +80,7 @@ def accept_quest(character, quest_id, quest_data_dict):
     return True
 
 
-
-
- 
-
-    
-
-
-def complete_quest(character, quest_id, quest_data_dict):
+def complete_quest(character, quest_id, quest_data_dict): # complete an active quest
     """
     Complete an active quest and grant rewards
     
@@ -129,7 +122,7 @@ def complete_quest(character, quest_id, quest_data_dict):
     return totals
 
 
-def abandon_quest(character, quest_id):
+def abandon_quest(character, quest_id): # abandon an active quest
     """
     Remove a quest from active quests without completing it
     
@@ -144,8 +137,8 @@ def abandon_quest(character, quest_id):
     character["active_quests"] = active_quests
     return True
 
-def get_active_quests(character, quest_data_dict):
-    """
+def get_active_quests(character, quest_data_dict): # get list of all active quests
+    """ 
     Get full data for all active quests
     
     Returns: List of quest dictionaries for active quests
@@ -161,7 +154,7 @@ def get_active_quests(character, quest_data_dict):
             result.append(quest)
     return result
 
-def get_completed_quests(character, quest_data_dict):
+def get_completed_quests(character, quest_data_dict): # get list of all completed quests
     """
     Get full data for all completed quests
     
@@ -177,7 +170,7 @@ def get_completed_quests(character, quest_data_dict):
     return result
 
 
-def get_available_quests(character, quest_data_dict):
+def get_available_quests(character, quest_data_dict): # get list of quests character can accept
     """
     Get quests that character can currently accept
     
@@ -215,7 +208,7 @@ def get_available_quests(character, quest_data_dict):
 # QUEST TRACKING
 # ============================================================================
 
-def is_quest_completed(character, quest_id):
+def is_quest_completed(character, quest_id): # check if a specific quest has been completed
     """
     Check if a specific quest has been completed
     
@@ -225,7 +218,7 @@ def is_quest_completed(character, quest_id):
     return quest_id in character.get("completed_quests", [])
 
 
-def is_quest_active(character, quest_id):
+def is_quest_active(character, quest_id): # check if a specific quest is currently active
     """
     Check if a specific quest is currently active
     
@@ -236,7 +229,7 @@ def is_quest_active(character, quest_id):
         return False
     return True
 
-def can_accept_quest(character, quest_id, quest_data_dict):
+def can_accept_quest(character, quest_id, quest_data_dict): # check if character meets all requirements to accept quest
     """
     Check if character meets all requirements to accept quest
     
@@ -265,7 +258,7 @@ def can_accept_quest(character, quest_id, quest_data_dict):
     return True
 
 
-def get_quest_prerequisite_chain(quest_id, quest_data_dict):
+def get_quest_prerequisite_chain(quest_id, quest_data_dict): # get full chain of prerequisites for a quest
     """
     Get the full chain of prerequisites for a quest
     
@@ -302,7 +295,7 @@ def get_quest_prerequisite_chain(quest_id, quest_data_dict):
 # QUEST STATISTICS
 # ============================================================================
 
-def get_quest_completion_percentage(character, quest_data_dict):
+def get_quest_completion_percentage(character, quest_data_dict): # calculate percentage of quests completed
     """
     Calculate what percentage of all quests have been completed
     
@@ -317,7 +310,7 @@ def get_quest_completion_percentage(character, quest_data_dict):
     percentage = (complete_quests / total_quests) * 100
     return percentage
 
-def get_total_quest_rewards_earned(character, quest_data_dict):
+def get_total_quest_rewards_earned(character, quest_data_dict): # calculate total XP and gold earned from completed quests
     """
     Calculate total XP and gold earned from completed quests
     
@@ -340,7 +333,7 @@ def get_total_quest_rewards_earned(character, quest_data_dict):
 
     
 
-def get_quests_by_level(quest_data_dict, min_level, max_level):
+def get_quests_by_level(quest_data_dict, min_level, max_level): # get quests within a level range
     """
     Get all quests within a level range
     
@@ -357,7 +350,7 @@ def get_quests_by_level(quest_data_dict, min_level, max_level):
 # DISPLAY FUNCTIONS
 # ============================================================================
 
-def display_quest_info(quest_data):
+def display_quest_info(quest_data): # display detailed quest information
     """
     Display formatted quest information
     
@@ -370,7 +363,7 @@ def display_quest_info(quest_data):
     print(f"Requirements: {quest_data['requirements']}")
     
 
-def display_quest_list(quest_list):
+def display_quest_list(quest_list): # display a list of quests in summary format
     """
     Display a list of quests in summary format
     
@@ -390,7 +383,7 @@ def display_quest_list(quest_list):
         print(f"{title:<30} {level:<10} {rewards}")
     
 
-def display_character_quest_progress(character, quest_data_dict):
+def display_character_quest_progress(character, quest_data_dict): # display character's quest statistics and progress
     """
     Display character's quest statistics and progress
     
@@ -423,7 +416,7 @@ def display_character_quest_progress(character, quest_data_dict):
 # VALIDATION
 # ============================================================================
 
-def validate_quest_prerequisites(quest_data_dict):
+def validate_quest_prerequisites(quest_data_dict): # validate that all quest prerequisites exist
     """
     Validate that all quest prerequisites exist
     

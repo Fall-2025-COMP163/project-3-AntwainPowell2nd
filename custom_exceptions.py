@@ -9,27 +9,27 @@ This module defines all custom exceptions used throughout the game.
 # BASE GAME EXCEPTIONS
 # ============================================================================
 
-class GameError(Exception):
+class GameError(Exception): # the base exception for all game-related errors
     """Base exception for all game-related errors"""
     pass
 
-class DataError(GameError):
+class DataError(GameError): # the base exception for data-related errors
     """Base exception for data-related errors"""
     pass
 
-class CharacterError(GameError):
+class CharacterError(GameError): # the base exception for character-related errors
     """Base exception for character-related errors"""
     pass
 
-class CombatError(GameError):
+class CombatError(GameError): # the base exception for combat-related errors
     """Base exception for combat-related errors"""
     pass
 
-class QuestError(GameError):
+class QuestError(GameError): # the base exception for quest-related errors
     """Base exception for quest-related errors"""
     pass
 
-class InventoryError(GameError):
+class InventoryError(GameError): # the base exception for inventory-related errors
     """Base exception for inventory-related errors"""
     pass
 
