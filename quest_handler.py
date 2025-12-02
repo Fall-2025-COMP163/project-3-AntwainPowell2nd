@@ -62,8 +62,8 @@ def accept_quest(character, quest_id, quest_data_dict):
         raise QuestNotActiveError
 
     quest = quest_data_dict[quest_id]
-    level = character.get("level", 0)
-    required_level = quest.get("required_level", 0)
+    level = int(character.get("level", 0))
+    required_level = int(quest.get("required_level", 0))
 
     if level < required_level:
         raise InsufficientLevelError
@@ -72,7 +72,11 @@ def accept_quest(character, quest_id, quest_data_dict):
     if prereq and prereq != "NONE" and prereq not in character.get("completed_quests", []):
         raise QuestRequirementsNotMetError
 
-    character.setdefault("active_quests", []).append(quest_id)
+    if not isinstance(character.get("active_quests"), list):
+        character["active_quests"] = []
+    character["active_quests"].append(quest_id)
+
+
     return True
 
 
@@ -187,21 +191,21 @@ def get_available_quests(character, quest_data_dict):
     level = int(character.get("level", 0))
     active = set(character.get("active_quests", []))
     completed = set(character.get("completed_quests", []))
-    for quests, quest_id in quest_data_dict.items():
+    for quest_id, quest in quest_data_dict.items():
         try:
-            required_level = int(character.get("required_level", 0))
+            required_level = int(quest.get("required_level", 0))
             if level < required_level:
                 continue
 
             if quest_id in active or quest_id in completed:
                 continue
 
-            prerequisite = character.get("prerequisite", "NONE")
+            prerequisite = quest.get("prerequisite", "NONE")
             if prerequisite and prerequisite != "NONE":
                 if prerequisite not in completed:
                     continue
             
-            avaliable_quests.append(quests)
+            avaliable_quests.append(quest)
 
         except (ValueError, TypeError):
             continue
